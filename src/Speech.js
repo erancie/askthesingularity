@@ -1,3 +1,5 @@
+//shout out to Darwin Tech (https://www.youtube.com/watch?v=U2g--_TDYj4)
+//and Mohan Raj for inspo with this component (https://www.section.io/engineering-education/speech-recognition-in-javascript/)
 import React, { useEffect, useState } from 'react'
 import Prompt from './Prompt'
 
@@ -35,11 +37,16 @@ export default function Speech() {
       console.log('onstart')
     }
     recognition.onresult = event => {
+      //build a transcript string
       const transcript = Array.from(event.results)
       .map(result => result[0])
       .map(result => result.transcript)
       .join('')
+      // console.log(event.results)
+      // console.log(event.results[0])
+      // console.log(event.results[0].transcript)//undefined?
       console.log(transcript)
+      //set text to transcript string
       setText(transcript)
       recognition.onerror = event => {
         console.log(event.error)
