@@ -8,21 +8,18 @@ export default function Prompt(props) {
   const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
   const openai = new OpenAI(OPENAI_API_KEY);
   
-  let prompt = props.speechString
+  const [promptState, setPromptState] = useState({
+    prompt: props.speechString,
+    completion: '',
+  })
 
   useEffect(()=> {
     handlePromptChange()
-  }, [prompt])
+  }, [props.speechString])
 
   const handlePromptChange = () => {
-    setPromptState({prompt: prompt})
+    setPromptState({prompt: props.speechString})
   }
-
-  const [promptState, setPromptState] = useState({
-    prompt: '',
-    tokens: 12,
-    completion: '',
-  })
 
   const handleChange = (event)=>{
     const { name, value } = event.target
@@ -38,7 +35,7 @@ export default function Prompt(props) {
 
   async function sendPrompt() {
     const gptResponse = await openai.complete({
-        engine: 'davinci',
+        engine: 'davinci-instruct-beta',
         maxTokens: 64,
         prompt: promptState.prompt
     });
@@ -49,7 +46,6 @@ export default function Prompt(props) {
     <div className='container'>
       <textarea className='in' type="text" name='prompt' onChange={handleChange} value={promptState.prompt}></textarea>
       <button className='btn btn-success btn-lg p-5 m-5' type='button' onClick={sendPrompt} >Complete</button>
-      <div></div>
       <Response completion={promptState.completion} />
     </div>
   )

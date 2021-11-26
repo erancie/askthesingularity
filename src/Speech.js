@@ -17,25 +17,33 @@ export default function Speech() {
   const [text, setText ] = useState(null)
 
   useEffect(()=>{
-    handleListen()
+    handleListen(); console.log('handleListen()');
   }, [isListening])
 
   const handleListen = () => {
     if(isListening){
-      recognition.start()
-      recognition.onend = () => {
-        console.log('start - onend -- start')
-        recognition.start()
+      recognition.start(); console.log('start');
+      // The onend property of the SpeechRecognition interface represents an event handler 
+      // that will run when the speech recognition service has disconnected 
+      // (when the 'end' event fires.)
+
+      // IF listening then define another start within onend callback
+      // callback records instructions on what to do when 'end' event occurs
+      recognition.onend = () => { 
+        console.log('onend')
+        recognition.start(); console.log('restart');
       }
     }else {
-      recognition.stop()
-      recognition.onend = () => {
-        console.log('stop - onend')
-      }
+      recognition.stop(); console.log('stop')
+
+      // IF NOT listening define no restart onend
+      recognition.onend =()=> console.log('onend')    
     }
-    recognition.onstart = () => {
-      console.log('onstart')
-    }
+
+    //define what happens everytime recognition has started listening
+    recognition.onstart = () => console.log('onstart')
+    
+    //define what happens everytime recognition produces a result event
     recognition.onresult = event => {
       //build a transcript string
       const transcript = Array.from(event.results)
@@ -48,9 +56,7 @@ export default function Speech() {
       console.log(transcript)
       //set text to transcript string
       setText(transcript)
-      recognition.onerror = event => {
-        console.log(event.error)
-      }
+      recognition.onerror = event => console.log(event.error)
     }
   }
   return (
