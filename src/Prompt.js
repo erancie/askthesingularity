@@ -35,7 +35,8 @@ export default function Prompt(props) {
 
   async function sendPrompt() {
     const gptResponse = await openai.complete({
-        engine: 'davinci-instruct-beta',
+        // engine: 'davinci-instruct-beta',
+        engine: 'ada',
         maxTokens: 64,
         prompt: promptState.prompt
     });
