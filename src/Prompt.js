@@ -41,16 +41,35 @@ export default function Prompt(props) {
         prompt: promptState.prompt
     });
     setPromptState({completion: gptResponse.data.choices[0].text})
-    //send completion back to parent
-    
-
   };
+
+  //hanle add click by sending completion back to parent
+  const handleAdd =(completion)=>{
+    props.onComplete(completion)
+  }
 
   return (
     <div className='container'>
-      <textarea className='in' type="text" name='prompt' onChange={handleChange} value={promptState.prompt}></textarea>
-      <button className='btn btn-success btn-lg p-5 m-5' type='button' onClick={sendPrompt} >Complete</button>
+      <textarea className='in' type="text" 
+                name='prompt' 
+                onChange={handleChange} 
+                value={promptState.prompt}>
+      </textarea>
+
+      <button className='btn btn-warning btn-lg p-5 m-5' 
+              type='button' 
+              onClick={sendPrompt} >
+        Complete
+      </button>
+      
       <Response completion={promptState.completion} />
+
+      <button className='btn btn-success btn-lg p-5 m-5' 
+              type='button' 
+              onClick={()=>handleAdd(promptState.completion)} >
+        Add
+      </button>
+      
     </div>
   )
 }

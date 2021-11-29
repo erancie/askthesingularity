@@ -32,8 +32,6 @@ export default function Speech() {
   useEffect(()=>{
     handleListen(); console.log('handleListen()');
   }, [isListening])
-    //effect for onComplete?
-  
 
   //handlers
   const handleListen = () => {
@@ -49,7 +47,10 @@ export default function Speech() {
     }
   }
 
-  //handle onComplete - include completion string to make new text string
+  //**handle onComplete - include completion string to make new text string
+  const handleComplete = (completion) => {
+    setText(prevState => prevState + completion)
+  }
 
   return (
     <div className='container'>
@@ -63,9 +64,7 @@ export default function Speech() {
         {isListening ? <div className='mb-5'><i>Listening</i></div> : <div className='mb-5'><i>Not Listening</i></div>}
       </div>
 
-      {/* //add onComplete prop */}
-      <Prompt speechString={text} />
-
+      <Prompt speechString={text} onComplete={handleComplete} />
     </div>
   )
 }
