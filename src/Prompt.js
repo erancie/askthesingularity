@@ -41,6 +41,9 @@ export default function Prompt(props) {
         prompt: promptState.prompt
     });
     setPromptState({completion: gptResponse.data.choices[0].text})
+    //send completion back to parent
+    
+
   };
 
   return (

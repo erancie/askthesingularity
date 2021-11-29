@@ -13,9 +13,11 @@ recognition.lang = 'en-US'
 
 
 export default function Speech() {
+  //state
   const [isListening, setIsListening ] = useState(false)
   const [text, setText ] = useState(null)
 
+  //recognition
   recognition.onstart = () => console.log('onstart')
 
   recognition.onresult = event => {
@@ -26,11 +28,14 @@ export default function Speech() {
     setText(transcript); console.log(transcript);
     recognition.onerror = event => console.log(event.error) 
   }
-
+  //effects
   useEffect(()=>{
     handleListen(); console.log('handleListen()');
   }, [isListening])
+    //effect for onComplete?
+  
 
+  //handlers
   const handleListen = () => {
     if(isListening){                                   
       recognition.start(); console.log('start');
@@ -43,6 +48,9 @@ export default function Speech() {
       recognition.onend =()=> console.log('onend') 
     }
   }
+
+  //handle onComplete - include completion string to make new text string
+
   return (
     <div className='container'>
 
@@ -55,6 +63,7 @@ export default function Speech() {
         {isListening ? <div className='mb-5'><i>Listening</i></div> : <div className='mb-5'><i>Not Listening</i></div>}
       </div>
 
+      {/* //add onComplete prop */}
       <Prompt speechString={text} />
 
     </div>
