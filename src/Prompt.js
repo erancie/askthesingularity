@@ -12,13 +12,18 @@ export default function Prompt(props) {
     prompt: props.speechString,
     completion: '',
   })
-
-  useEffect(()=> {
-    handlePromptChange()
-  }, [props.speechString])
-
-  const handlePromptChange = () => {
+  
+  useEffect(()=> { // if props from parent change - reset state
     setPromptState({prompt: props.speechString})
+  }, [props.speechString]) 
+
+  // useEffect(()=> { //if state from child changes - send to parent (lifting state up?)
+  //   props.onType(promptState.prompt)
+  // }, [promptState.prompt]) 
+
+  //handle add click by sending completion back to parent
+  const handleAdd =()=>{
+    props.onComplete(promptState.completion) //why does this clear child state data??
   }
 
   const handleChange = (event)=>{
@@ -29,24 +34,17 @@ export default function Prompt(props) {
         [name]: value
       }
     })
-    console.log(name)
-    console.log(value)
+    console.log(name); console.log(value);
   }
 
   async function sendPrompt() {
     const gptResponse = await openai.complete({
-        // engine: 'davinci-instruct-beta',
-        engine: 'ada',
+        engine: 'ada', //davinci-instruct-beta
         maxTokens: 64,
         prompt: promptState.prompt
     });
     setPromptState({completion: gptResponse.data.choices[0].text})
   };
-
-  //hanle add click by sending completion back to parent
-  const handleAdd =(completion)=>{
-    props.onComplete(completion)
-  }
 
   return (
     <div className='container'>
@@ -66,7 +64,7 @@ export default function Prompt(props) {
 
       <button className='btn btn-success btn-lg p-5 m-5' 
               type='button' 
-              onClick={()=>handleAdd(promptState.completion)} >
+              onClick={handleAdd} >
         Add
       </button>
       

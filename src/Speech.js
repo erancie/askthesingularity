@@ -44,14 +44,17 @@ export default function Speech() {
     }else {
       recognition.stop(); console.log('stop');
       recognition.onend =()=> console.log('onend') 
+      // setText(prev => prev + ' ' + text)
     }
   }
 
   //**handle onComplete - include completion string to make new text string
   const handleComplete = (completion) => {
-    setText(prevState => prevState + completion)
+    setText(prevState => prevState + completion) //**replaces
   }
-
+  // const handleType = (prompt) => {
+  //   setText(prompt)
+  // }
   return (
     <div className='container'>
 
@@ -64,7 +67,8 @@ export default function Speech() {
         {isListening ? <div className='mb-5'><i>Listening</i></div> : <div className='mb-5'><i>Not Listening</i></div>}
       </div>
 
-      <Prompt speechString={text} onComplete={handleComplete} />
+      <Prompt speechString={text} onComplete={handleComplete}  />
+      {/* onType={handleType} */}
     </div>
   )
 }
