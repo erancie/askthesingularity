@@ -22,6 +22,9 @@ export default function Prompt(props) {
   // }, [promptState.prompt]) 
 
   //handle add click by sending completion back to parent
+  // const handleAdd =(completion)=>{
+  //   props.onComplete(completion)
+  // }
   const handleAdd =()=>{
     props.onComplete(promptState.completion) //why does this clear child state data??
   }
@@ -39,13 +42,13 @@ export default function Prompt(props) {
 
   async function sendPrompt() {
     const gptResponse = await openai.complete({
-        engine: 'ada', //davinci-instruct-beta
+        engine: 'davinci-instruct-beta', //davinci-instruct-beta
         maxTokens: 64,
         prompt: promptState.prompt
     });
     setPromptState({completion: gptResponse.data.choices[0].text})
   };
-
+  //DARK NOTES ARE IN!!!
   return (
     <div className='container'>
       <textarea className='in' type="text" 
