@@ -21,10 +21,6 @@ export default function Prompt(props) {
   //   props.onType(promptState.prompt)
   // }, [promptState.prompt]) 
 
-  //handle add click by sending completion back to parent
-  // const handleAdd =(completion)=>{
-  //   props.onComplete(completion)
-  // }
   const handleAdd =()=>{
     props.onComplete(promptState.completion) //why does this clear child state data??
   }
@@ -47,6 +43,7 @@ export default function Prompt(props) {
         prompt: promptState.prompt
     });
     setPromptState({completion: gptResponse.data.choices[0].text})
+    // console.log(`response: ${gptResponse}`)
   };
   //DARK NOTES ARE IN!!!
   return (
