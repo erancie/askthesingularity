@@ -25,7 +25,7 @@ export default function Speech() {
     .map(result => result[0])
     .map(result => result.transcript)
     .join('')
-    setText(transcript); console.log(transcript);
+    setText(prev => prev +" "+ transcript); console.log(transcript);
     recognition.onerror = event => console.log(event.error) 
   }
   //effects
