@@ -25,7 +25,9 @@ export default function Speech() {
     .map(result => result[0])
     .map(result => result.transcript)
     .join('')
-    setText(prev => prev +" "+ transcript); console.log(transcript);
+    setText(transcript); console.log(transcript);
+    // setText(prev => prev +' '+ transcript); console.log(transcript);
+    // how to get this line working without duplicating whole text?
     recognition.onerror = event => console.log(event.error) 
   }
   //effects
@@ -43,8 +45,9 @@ export default function Speech() {
       }
     }else {
       recognition.stop(); console.log('stop');
-      recognition.onend =()=> console.log('onend') 
-      // setText(prev => prev + ' ' + text)
+      recognition.onend =()=> {console.log('onend') 
+        setText(prev => prev + ' ' + text)
+      }
     }
   }
 
@@ -66,6 +69,8 @@ export default function Speech() {
 
         {isListening ? <div className='mb-5'><i>Listening</i></div> : <div className='mb-5'><i>Not Listening</i></div>}
       </div>
+
+      <p style={{height: '100px'}}>{text}</p>
 
       <Prompt speechString={text} onComplete={handleComplete}  />
       {/* onType={handleType} */}
