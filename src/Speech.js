@@ -24,22 +24,12 @@ export default function Speech() {
   const [transcript, setTranscript ] = useState(null)
   const [completion, setCompletion ] = useState(null)
 
-  //recognition
-  recognition.onstart = () => console.log('onstart')
-
-  recognition.onresult = event => { //resolves value first - before onend
-    const transcript = Array.from(event.results)
-    .map(result => result[0])
-    .map(result => result.transcript)
-    .join('')
-    setTranscript(transcript); console.log(transcript);
-    recognition.onerror = event => console.log(event.error) 
-  }
   //effects
   useEffect(()=>{
     handleListen(); console.log('handleListen()');
   }, [isListening])
 
+  //TODO: this async function is a UseEffect? look at fetch eg.
   async function sendPrompt() {
     const gptResponse = await openai.complete({
         engine: 'ada', //davinci-instruct-beta
@@ -49,17 +39,29 @@ export default function Speech() {
     setCompletion(gptResponse.data.choices[0].text)
     console.log(`gpt: ${gptResponse.data.choices[0].text}`)
   }
-  //handlers
+
+  //recognition
+  recognition.onstart = () => console.log('onstart callback')
+  //onresult resolves transcript value while listening - before onend  
+  recognition.onresult = event => { 
+    const transcript = Array.from(event.results)
+    .map(result => result[0])
+    .map(result => result.transcript)
+    .join('')
+    setTranscript(transcript); console.log(transcript);
+    recognition.onerror = event => console.log(event.error) 
+  }
+
   const handleListen = () => {
     if(isListening){                                   
-      recognition.start(); console.log('start');
+      recognition.start(); console.log('start listening event');
       recognition.onend = () => {                       
-        console.log('onend')
-        recognition.start(); console.log('restart');
+        console.log('onend callback')
+        recognition.start(); console.log('restart listening');
       }
     }else {
-      recognition.stop(); console.log('stop'); 
-      recognition.onend =()=> {console.log('onend') 
+      recognition.stop(); console.log('stop listening event'); 
+      recognition.onend =()=> {console.log('onend callback') 
         setText(prevText => prevText +' '+ transcript)
         setTranscript('')
       }
@@ -86,6 +88,10 @@ export default function Speech() {
                 type="text" 
                 name='text' 
                 onChange={(e)=>setText(e.target.value)} 
+                // event listenere can be:
+                //inline cb declaration or
+                //reference to cb declaration
+                //not a function call
                 value={text}>
                 {/* value={isListening ? transcript : text}> */}
       </textarea>
@@ -107,15 +113,3 @@ export default function Speech() {
     </div>
   )
 }
-
-
-
-  // const handleChange = (event)=>{ 
-  //   setText(event.target.value)
-  // }
-
-  // const handleComplete = () => {
-  //   setText(prevState => {
-  //     return prevState +' '+ completion
-  //   })
-  // }
