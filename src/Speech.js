@@ -16,18 +16,17 @@ export default function Speech() {
   //state
   const [isListening, setIsListening ] = useState(false)
   const [text, setText ] = useState(null)
+  const [transcript, setTranscript ] = useState(null)
 
   //recognition
   recognition.onstart = () => console.log('onstart')
 
-  recognition.onresult = event => {
+  recognition.onresult = event => { //resolves value first - before onend
     const transcript = Array.from(event.results)
     .map(result => result[0])
     .map(result => result.transcript)
     .join('')
-    setText(transcript); console.log(transcript);
-    // setText(prev => prev +' '+ transcript); console.log(transcript);
-    // how to get this line working without duplicating whole text?
+    setTranscript(transcript); console.log(transcript);
     recognition.onerror = event => console.log(event.error) 
   }
   //effects
@@ -44,20 +43,21 @@ export default function Speech() {
         recognition.start(); console.log('restart');
       }
     }else {
-      recognition.stop(); console.log('stop');
+      recognition.stop(); console.log('stop'); 
       recognition.onend =()=> {console.log('onend') 
-        setText(prev => prev + ' ' + text)
+        setText(prevText => prevText +' '+ transcript)
       }
     }
   }
-
   //**handle onComplete - include completion string to make new text string
   const handleComplete = (completion) => {
-    setText(prevState => prevState + completion) //**replaces
+    setText(prevState => {
+      return prevState +' '+ completion
+    })
   }
-  // const handleType = (prompt) => {
-  //   setText(prompt)
-  // }
+  const handleType = (prompt) => {
+    setText(prompt)
+  }
   return (
     <div className='container'>
 
@@ -70,10 +70,11 @@ export default function Speech() {
         {isListening ? <div className='mb-5'><i>Listening</i></div> : <div className='mb-5'><i>Not Listening</i></div>}
       </div>
 
-      <p style={{height: '100px'}}>{text}</p>
+      <p style={{height: '100px'}}>{transcript}</p>
 
-      <Prompt speechString={text} onComplete={handleComplete}  />
-      {/* onType={handleType} */}
+      <Prompt speechString={text} 
+              onComplete={handleComplete}  
+              onType={handleType} />
     </div>
   )
 }
