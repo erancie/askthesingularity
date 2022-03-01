@@ -33,39 +33,46 @@
 //     // props.onComplete(promptState.prompt)
 //   }
 
-//   const handleChange = (e) => {
-//     setPromptState(prev => ({...prev, prompt: e.target.value}))
+  useEffect(()=> { //if state from child changes - send to parent (lifting state up?)
+    props.onType(promptState.prompt)
+  }, [promptState.prompt]) 
 
-//   }
-//   // const handleChange = (event)=>{ 
-//   //   // props.onType(promptState.prompt);
-//   //   const { name, value } = event.target
-//   //   setPromptState((preValue)=>{  
-//   //     return {
-//   //       ...preValue,
-//   //       [name]: value
-//   //     }
-//   //   })
-//   //   console.log(name); console.log(value);
-//   // }
+  //handle add click by sending completion back to parent
+  // const handleAdd =(completion)=>{
+  //   props.onComplete(completion)
+  // }
+  const handleAdd =()=>{
+    props.onComplete(promptState.completion) //why does this clear child state data??
+  }
 
-//   async function sendPrompt() {
-//     const gptResponse = await openai.complete({
-//         engine: 'ada', //davinci-instruct-beta
-//         maxTokens: 64,
-//         prompt: promptState.prompt
-//     });
-//     setPromptState({completion: gptResponse.data.choices[0].text})
-//   }
+  const handleChange = (event)=>{
+    const { name, value } = event.target
+    setPromptState((preValue)=>{  
+      return {
+        ...preValue,
+        [name]: value //overwrites any previous element with same property name
+      }
+    })
+    console.log(name); console.log(value);
+  }
+  
+  async function sendPrompt() {
+    const gptResponse = await openai.complete({
+        engine: 'ada', //davinci-instruct-beta
+        maxTokens: 64,
+        prompt: promptState.prompt
+    });
+    setPromptState({completion: gptResponse.data.choices[0].text})
+  };
 
-//   return (
-//     <div className='container'>
-//       <textarea className='in' 
-//                 type="text" 
-//                 name='prompt' 
-//                 onChange={handleChange} 
-//                 value={promptState.prompt}>
-//       </textarea>
+  return (
+    <div className='container'>
+      <textarea className='in' 
+                type="text" 
+                name='prompt' 
+                onChange={handleChange} 
+                value={promptState.prompt}>
+      </textarea>
 
 //       <button className='btn btn-warning btn-lg p-5 m-5' 
 //               type='button' 

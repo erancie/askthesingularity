@@ -88,12 +88,7 @@ export default function Speech() {
                 type="text" 
                 name='text' 
                 onChange={(e)=>setText(e.target.value)} 
-                // event listenere can be:
-                //inline cb declaration or
-                //reference to cb declaration
-                //not a function call
                 value={text}>
-                {/* value={isListening ? transcript : text}> */}
       </textarea>
 
       <button className='btn btn-warning btn-lg p-5 m-5' 
