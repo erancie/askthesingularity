@@ -8,6 +8,8 @@ import Response from './Components/Response';
 import Text from './Components/Text';
 import Button from './Components/Button';
 
+// import firebaseApp, {analytics} from './Firebase';
+
 //OpenAI GPT-3
 const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 const openai = new OpenAI(OPENAI_API_KEY);
